@@ -1,54 +1,187 @@
-/* 🎵 CINEMATIC AMBIENT BACKGROUND MUSIC */
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owl Post</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  background:black;
+  overflow:hidden;
+  font-family:'Cinzel', serif;
+  color:gold;
+}
+
+/* Magical glow */
+body::before{
+  content:"";
+  position:fixed;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 40%),
+             radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), transparent 40%);
+  animation:fogMove 40s linear infinite;
+  z-index:-1;
+}
+
+@keyframes fogMove{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+.screen{
+  position:absolute;
+  width:100%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+  transition:opacity 1s ease;
+}
+
+.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+button{
+  background:#740001;
+  color:gold;
+  border:none;
+  padding:14px 30px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:20px;
+}
+
+input{
+  padding:10px;
+  font-size:16px;
+  text-align:center;
+  background:black;
+  border:1px solid gold;
+  color:gold;
+}
+
+.letter-box{
+  max-width:800px;
+  padding:30px;
+  border:2px solid gold;
+  background:rgba(15,15,15,0.95);
+  border-radius:12px;
+  box-shadow:0 0 30px gold;
+}
+
+.lion{
+  font-size:110px;
+  animation:pulse 2s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+
+.sparkle{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:gold;
+  border-radius:50%;
+  animation:float linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="screen" id="intro">
+  <h1>🕯️ An Owl Has Arrived</h1>
+  <button onclick="goPassword()">Begin</button>
+</div>
+
+<div class="screen hidden" id="password">
+  <h2>🔐 Enter the Gryffindor Password</h2>
+  <input type="text" id="passInput" placeholder="Password">
+  <button onclick="unlock()">Unlock</button>
+</div>
+
+<div class="screen hidden" id="lionScreen">
+  <div class="lion">🦁</div>
+  <h2>Welcome, Sasta SRK of Gryffindor</h2>
+</div>
+
+<div class="screen hidden" id="letterScreen">
+  <div class="letter-box">
+    <h2>Hogwarts School of Witchcraft and Wizardry</h2>
+    <p id="typewriter"></p>
+
+    <h3>📜 Ministry Secret Records</h3>
+    <p>
+    Subject: Dhadpadyaa (aka Sasta SRK)<br><br>
+    • Falls randomly but rises dramatically.<br>
+    • Official Hogwarts Gossip Partner.<br>
+    • Believes he is SRK (budget edition).<br>
+    • Possesses legendary molu-golu soft skin.
+    </p>
+
+    <h3>Happy Birthday ❤️</h3>
+    <p>— Varada Devi</p>
+  </div>
+</div>
+
+<script>
+
+/* 🎵 Smooth Cinematic Ambient Music */
 let audioContext;
 let masterGain;
-let oscillators = [];
 
-function startCinematicMusic(){
+function startMusic(){
   audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
   masterGain = audioContext.createGain();
-  masterGain.gain.value = 0; // start silent
+  masterGain.gain.value = 0;
   masterGain.connect(audioContext.destination);
 
-  // Deep ambient base layer
-  createLayer(110, "sine");   // deep warm tone
-  createLayer(220, "triangle"); // magical mid layer
-  createLayer(440, "sine");   // soft high shimmer
+  createLayer(110,"sine");
+  createLayer(220,"triangle");
+  createLayer(440,"sine");
 
   fadeIn();
 }
 
-function createLayer(frequency, type){
+function createLayer(freq,type){
   let osc = audioContext.createOscillator();
   let gain = audioContext.createGain();
-
   osc.type = type;
-  osc.frequency.value = frequency;
-
-  gain.gain.value = 0.03; // very soft individual layers
-
+  osc.frequency.value = freq;
+  gain.gain.value = 0.03;
   osc.connect(gain);
   gain.connect(masterGain);
-
   osc.start();
-
-  oscillators.push(osc);
 }
 
 function fadeIn(){
-  let volume = 0;
+  let vol = 0;
   let fade = setInterval(function(){
-    if(volume < 0.15){
-      volume += 0.005;
-      masterGain.gain.value = volume;
-    } else {
-      clearInterval(fade);
-    }
-  }, 200);
+    if(vol < 0.15){
+      vol += 0.005;
+      masterGain.gain.value = vol;
+    } else clearInterval(fade);
+  },200);
 }
 
-/* Sparkles */
 for(let i=0;i<120;i++){
   let star=document.createElement("div");
   star.className="sparkle";
@@ -63,19 +196,14 @@ function goPassword(){
 }
 
 function unlock(){
-  let pass=document.getElementById("passInput").value.trim().toLowerCase();
-
+  let pass=document.getElementById("passInput").value.toLowerCase().trim();
   if(pass==="gryffindor"){
-
-    startCinematicMusic(); // 🎵 Starts smooth ambient music
-
+    startMusic();
     document.getElementById("password").classList.add("hidden");
     document.getElementById("lionScreen").classList.remove("hidden");
-
     setTimeout(showLetter,2500);
-
-  }else{
-    alert("Even SRK would remember the password.");
+  } else {
+    alert("Wrong password, Mr. SRK.");
   }
 }
 
@@ -85,9 +213,7 @@ function showLetter(){
   typeWriter();
 }
 
-/* Typewriter */
-let text="Dear Mr. Sasta SRK (aka Dhadpadyaa),\n\nThe Ministry confirms that today marks the birthday of a Gryffindor who may fall often — but always rises dramatically.\n\nYou may gossip.\nYou may pretend to be SRK.\nYou may possess legendary molu-golu enchanted skin.\n\nBut today, the wizarding world celebrates YOU.";
-
+let text="Dear Mr. Sasta SRK,\n\nToday the wizarding world celebrates YOU.\n\nEven if you fall (Dhadpadyaa), you rise dramatically.\n\nHappy Birthday, Gryffindor.";
 let i=0;
 
 function typeWriter(){
@@ -98,12 +224,7 @@ function typeWriter(){
   }
 }
 
-function celebrate(){
-  for(let i=0;i<30;i++){
-    let fw=document.createElement("div");
-    fw.className="firework";
-    fw.style.left=Math.random()*100+"vw";
-    fw.style.top=Math.random()*100+"vh";
-    document.body.appendChild(fw);
-  }
-}
+</script>
+
+</body>
+</html>

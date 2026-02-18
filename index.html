@@ -2,8 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Owl Post</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owl Post</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
@@ -16,7 +16,7 @@ body{
   color:gold;
 }
 
-/* Moving Fog using gradient (no external image) */
+/* Magical moving fog */
 body::before{
   content:"";
   position:fixed;
@@ -33,7 +33,6 @@ body::before{
   to{transform:translateX(-50%);}
 }
 
-/* Screen system */
 .screen{
   position:absolute;
   width:100%;
@@ -52,14 +51,12 @@ body::before{
   pointer-events:none;
 }
 
-/* Title */
 h1{
   font-size: clamp(30px, 6vw, 60px);
   color:#740001;
   text-shadow:0 0 20px red;
 }
 
-/* Button */
 button{
   background:#740001;
   color:gold;
@@ -85,7 +82,6 @@ input{
   color:gold;
 }
 
-/* Letter box */
 .letter-box{
   max-width:800px;
   padding:30px;
@@ -95,9 +91,8 @@ input{
   box-shadow:0 0 30px gold;
 }
 
-/* CSS Lion (inline SVG container animation) */
 .lion{
-  width:150px;
+  font-size:100px;
   animation:pulse 2s infinite alternate;
 }
 
@@ -106,7 +101,6 @@ input{
   to{transform:scale(1.08);}
 }
 
-/* Sparkles */
 .sparkle{
   position:absolute;
   width:3px;
@@ -121,11 +115,10 @@ input{
   to{transform:translateY(-10vh);}
 }
 
-/* Fireworks */
 .firework{
   position:absolute;
-  width:5px;
-  height:5px;
+  width:6px;
+  height:6px;
   background:gold;
   border-radius:50%;
   animation:explode 1s ease-out forwards;
@@ -133,7 +126,7 @@ input{
 
 @keyframes explode{
   from{transform:scale(1);}
-  to{transform:scale(15); opacity:0;}
+  to{transform:scale(18); opacity:0;}
 }
 </style>
 </head>
@@ -154,11 +147,9 @@ input{
   <button onclick="unlock()">Unlock</button>
 </div>
 
-<!-- LION -->
+<!-- LION SCREEN -->
 <div class="screen hidden" id="lionScreen">
-  <div class="lion">
-    🦁
-  </div>
+  <div class="lion">🦁</div>
   <h2>Welcome, Sasta SRK of Gryffindor</h2>
 </div>
 
@@ -186,6 +177,11 @@ input{
 
 <script>
 
+/* 🎵 Background Music (Chrome Safe) */
+let bgMusic = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_5d4e2c43ab.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.6;
+
 /* Sparkles */
 for(let i=0;i<120;i++){
   let star=document.createElement("div");
@@ -204,9 +200,16 @@ function unlock(){
   let pass=document.getElementById("passInput").value.trim().toLowerCase();
 
   if(pass==="gryffindor"){
+
+    /* 🎵 Start music EXACTLY on Unlock click */
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch(err => console.log(err));
+
     document.getElementById("password").classList.add("hidden");
     document.getElementById("lionScreen").classList.remove("hidden");
+
     setTimeout(showLetter,2500);
+
   }else{
     alert("Even SRK would remember the password.");
   }
@@ -231,7 +234,7 @@ function typeWriter(){
 }
 
 function celebrate(){
-  for(let i=0;i<25;i++){
+  for(let i=0;i<30;i++){
     let fw=document.createElement("div");
     fw.className="firework";
     fw.style.left=Math.random()*100+"vw";
@@ -239,6 +242,7 @@ function celebrate(){
     document.body.appendChild(fw);
   }
 }
+
 </script>
 
 </body>

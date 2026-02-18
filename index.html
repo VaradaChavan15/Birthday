@@ -16,7 +16,7 @@ body{
   color:gold;
 }
 
-/* Magical moving fog */
+/* Magical moving glow */
 body::before{
   content:"";
   position:fixed;
@@ -92,13 +92,13 @@ input{
 }
 
 .lion{
-  font-size:100px;
+  font-size:110px;
   animation:pulse 2s infinite alternate;
 }
 
 @keyframes pulse{
   from{transform:scale(1);}
-  to{transform:scale(1.08);}
+  to{transform:scale(1.1);}
 }
 
 .sparkle{
@@ -147,7 +147,7 @@ input{
   <button onclick="unlock()">Unlock</button>
 </div>
 
-<!-- LION SCREEN -->
+<!-- LION -->
 <div class="screen hidden" id="lionScreen">
   <div class="lion">🦁</div>
   <h2>Welcome, Sasta SRK of Gryffindor</h2>
@@ -177,10 +177,24 @@ input{
 
 <script>
 
-/* 🎵 Background Music (Chrome Safe) */
-let bgMusic = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_5d4e2c43ab.mp3");
+/* 🎵 Cinematic Magical Music (Reliable Hosted File) */
+let bgMusic = new Audio("https://cdn.pixabay.com/audio/2023/03/15/audio_7d9c2bb5c4.mp3");
 bgMusic.loop = true;
-bgMusic.volume = 0.6;
+bgMusic.volume = 0;
+
+/* Fade In Effect */
+function fadeInMusic(){
+  bgMusic.play().catch(err => console.log(err));
+  let vol = 0;
+  let fade = setInterval(function(){
+    if(vol < 0.6){
+      vol += 0.02;
+      bgMusic.volume = vol;
+    } else {
+      clearInterval(fade);
+    }
+  }, 200);
+}
 
 /* Sparkles */
 for(let i=0;i<120;i++){
@@ -201,9 +215,7 @@ function unlock(){
 
   if(pass==="gryffindor"){
 
-    /* 🎵 Start music EXACTLY on Unlock click */
-    bgMusic.currentTime = 0;
-    bgMusic.play().catch(err => console.log(err));
+    fadeInMusic(); // 🎵 starts instantly on click
 
     document.getElementById("password").classList.add("hidden");
     document.getElementById("lionScreen").classList.remove("hidden");

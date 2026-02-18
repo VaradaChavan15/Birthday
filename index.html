@@ -16,14 +16,15 @@ body{
   color:gold;
 }
 
-/* Magical glow */
+/* Magical moving glow background */
 body::before{
   content:"";
   position:fixed;
   width:200%;
   height:200%;
-  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 40%),
-             radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), transparent 40%);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), transparent 40%);
   animation:fogMove 40s linear infinite;
   z-index:-1;
 }
@@ -51,6 +52,12 @@ body::before{
   pointer-events:none;
 }
 
+h1{
+  font-size: clamp(30px, 6vw, 60px);
+  color:#740001;
+  text-shadow:0 0 20px red;
+}
+
 button{
   background:#740001;
   color:gold;
@@ -59,6 +66,12 @@ button{
   font-size:16px;
   cursor:pointer;
   margin-top:20px;
+  transition:0.3s;
+}
+
+button:hover{
+  background:gold;
+  color:#740001;
 }
 
 input{
@@ -71,12 +84,12 @@ input{
 }
 
 .letter-box{
-  max-width:800px;
-  padding:30px;
+  max-width:850px;
+  padding:35px;
   border:2px solid gold;
   background:rgba(15,15,15,0.95);
   border-radius:12px;
-  box-shadow:0 0 30px gold;
+  box-shadow:0 0 35px gold;
 }
 
 .lion{
@@ -102,49 +115,61 @@ input{
   from{transform:translateY(100vh);}
   to{transform:translateY(-10vh);}
 }
+
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:gold;
+  border-radius:50%;
+  animation:explode 1s ease-out forwards;
+}
+
+@keyframes explode{
+  from{transform:scale(1);}
+  to{transform:scale(18); opacity:0;}
+}
 </style>
 </head>
 
 <body>
 
+<!-- INTRO -->
 <div class="screen" id="intro">
-  <h1>🕯️ An Owl Has Arrived</h1>
+  <h1>🕯️ You Have Received an Owl Post</h1>
+  <p>Open at exactly 12:00 AM</p>
   <button onclick="goPassword()">Begin</button>
 </div>
 
+<!-- PASSWORD -->
 <div class="screen hidden" id="password">
   <h2>🔐 Enter the Gryffindor Password</h2>
   <input type="text" id="passInput" placeholder="Password">
   <button onclick="unlock()">Unlock</button>
 </div>
 
+<!-- LION REVEAL -->
 <div class="screen hidden" id="lionScreen">
   <div class="lion">🦁</div>
   <h2>Welcome, Sasta SRK of Gryffindor</h2>
 </div>
 
+<!-- LETTER -->
 <div class="screen hidden" id="letterScreen">
   <div class="letter-box">
     <h2>Hogwarts School of Witchcraft and Wizardry</h2>
     <p id="typewriter"></p>
 
-    <h3>📜 Ministry Secret Records</h3>
-    <p>
-    Subject: Dhadpadyaa (aka Sasta SRK)<br><br>
-    • Falls randomly but rises dramatically.<br>
-    • Official Hogwarts Gossip Partner.<br>
-    • Believes he is SRK (budget edition).<br>
-    • Possesses legendary molu-golu soft skin.
-    </p>
-
-    <h3>Happy Birthday ❤️</h3>
+    <h3>Happy Birthday, Wizard.</h3>
     <p>— Varada Devi</p>
+
+    <button onclick="celebrate()">Celebrate 🎆</button>
   </div>
 </div>
 
 <script>
 
-/* 🎵 Smooth Cinematic Ambient Music */
+/* 🎵 CINEMATIC CONTINUOUS AMBIENT MUSIC */
 let audioContext;
 let masterGain;
 
@@ -154,9 +179,10 @@ function startMusic(){
   masterGain.gain.value = 0;
   masterGain.connect(audioContext.destination);
 
-  createLayer(110,"sine");
-  createLayer(220,"triangle");
-  createLayer(440,"sine");
+  createLayer(110,"sine");      // deep base
+  createLayer(220,"triangle");  // magical mid
+  createLayer(440,"sine");      // shimmer
+  createLayer(660,"sine");      // light sparkle layer
 
   fadeIn();
 }
@@ -166,7 +192,7 @@ function createLayer(freq,type){
   let gain = audioContext.createGain();
   osc.type = type;
   osc.frequency.value = freq;
-  gain.gain.value = 0.03;
+  gain.gain.value = 0.02;
   osc.connect(gain);
   gain.connect(masterGain);
   osc.start();
@@ -175,14 +201,15 @@ function createLayer(freq,type){
 function fadeIn(){
   let vol = 0;
   let fade = setInterval(function(){
-    if(vol < 0.15){
-      vol += 0.005;
+    if(vol < 0.12){
+      vol += 0.003;
       masterGain.gain.value = vol;
     } else clearInterval(fade);
   },200);
 }
 
-for(let i=0;i<120;i++){
+/* Sparkles */
+for(let i=0;i<150;i++){
   let star=document.createElement("div");
   star.className="sparkle";
   star.style.left=Math.random()*100+"vw";
@@ -196,14 +223,15 @@ function goPassword(){
 }
 
 function unlock(){
-  let pass=document.getElementById("passInput").value.toLowerCase().trim();
+  let pass=document.getElementById("passInput").value.trim().toLowerCase();
+
   if(pass==="gryffindor"){
     startMusic();
     document.getElementById("password").classList.add("hidden");
     document.getElementById("lionScreen").classList.remove("hidden");
     setTimeout(showLetter,2500);
   } else {
-    alert("Wrong password, Mr. SRK.");
+    alert("Even SRK would remember the password.");
   }
 }
 
@@ -213,7 +241,9 @@ function showLetter(){
   typeWriter();
 }
 
-let text="Dear Mr. Sasta SRK,\n\nToday the wizarding world celebrates YOU.\n\nEven if you fall (Dhadpadyaa), you rise dramatically.\n\nHappy Birthday, Gryffindor.";
+/* TYPEWRITER LETTER */
+let text="Dear Mr. Molu Golu,\n\nThe Ministry of Magic has officially confirmed that today marks the birthday of a true Gryffindor — brave, loyal, dramatic, and slightly chaotic.\n\nKnown Magical Traits:\n\n• Falls randomly (Dhadpadyaa) but rises dramatically like SRK in slow motion.\n• Official Head of the Hogwarts Gossip Department.\n• Firmly believes he is Shah Rukh Khan (Ministry-approved budget edition).\n• Possesses suspiciously elastic, molu-golu soft skin — clearly enchanted.\n\nOn this special day, the wizarding world celebrates YOU.\n\nMay your year be filled with courage, laughter, dramatic entries, and unlimited gossip.";
+
 let i=0;
 
 function typeWriter(){
@@ -221,6 +251,16 @@ function typeWriter(){
     document.getElementById("typewriter").innerHTML+=text.charAt(i);
     i++;
     setTimeout(typeWriter,30);
+  }
+}
+
+function celebrate(){
+  for(let i=0;i<40;i++){
+    let fw=document.createElement("div");
+    fw.className="firework";
+    fw.style.left=Math.random()*100+"vw";
+    fw.style.top=Math.random()*100+"vh";
+    document.body.appendChild(fw);
   }
 }
 

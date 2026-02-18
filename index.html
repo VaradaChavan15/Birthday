@@ -1,111 +1,278 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Owl Post</title>
+
+<!-- Hogwarts Style Font -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-body {
+body{
   margin:0;
-  background:black;
-  color:gold;
-  font-family: 'Georgia', serif;
-  text-align:center;
   overflow:hidden;
+  background:black;
+  font-family:'Cinzel', serif;
+  color:gold;
 }
 
-.container {
-  padding:50px;
+/* CINEMATIC LOADING SCREEN */
+#loading{
+  position:fixed;
+  width:100%;
+  height:100vh;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+  animation:fadeOut 3s ease 4s forwards;
 }
 
-h1 {
-  font-size:50px;
+@keyframes fadeOut{
+  to{opacity:0; visibility:hidden;}
+}
+
+.loader-text{
+  font-size:40px;
   color:#740001;
+  animation:pulse 2s infinite alternate;
 }
 
-button {
+@keyframes pulse{
+  from{opacity:0.5;}
+  to{opacity:1;}
+}
+
+/* Moving Fog */
+body::before{
+  content:"";
+  position:fixed;
+  width:200%;
+  height:200%;
+  background:url("https://i.imgur.com/8I349oS.png");
+  opacity:0.12;
+  animation:fogMove 60s linear infinite;
+  z-index:-1;
+}
+
+@keyframes fogMove{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+/* Screens */
+.screen{
+  position:absolute;
+  width:100%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  transition:opacity 1.5s ease;
+}
+
+.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+h1{
+  font-size:60px;
+  color:#740001;
+  text-shadow:0 0 25px red;
+}
+
+button{
   background:#740001;
   color:gold;
   border:none;
-  padding:15px 30px;
+  padding:15px 35px;
   font-size:18px;
   cursor:pointer;
-  margin-top:30px;
+  margin-top:25px;
+  transition:0.4s;
 }
 
-button:hover {
+button:hover{
   background:gold;
   color:#740001;
 }
 
-.letter {
-  display:none;
-  background:#1a1a1a;
-  padding:40px;
-  margin-top:30px;
-  border:2px solid gold;
-  border-radius:10px;
+input{
+  padding:12px;
+  font-size:16px;
+  text-align:center;
+  background:black;
+  border:1px solid gold;
+  color:gold;
 }
 
-.sparkle {
+.letter-box{
+  max-width:850px;
+  padding:50px;
+  border:2px solid gold;
+  background:rgba(10,10,10,0.95);
+  border-radius:15px;
+  box-shadow:0 0 40px gold;
+}
+
+/* Animated Lion */
+.lion{
+  width:220px;
+  animation:lionPulse 3s infinite alternate;
+}
+
+@keyframes lionPulse{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+
+/* Sparkles */
+.sparkle{
   position:absolute;
-  width:5px;
-  height:5px;
+  width:4px;
+  height:4px;
   background:gold;
   border-radius:50%;
-  animation: float 5s infinite;
+  animation:float linear infinite;
 }
 
-@keyframes float {
-  from {transform: translateY(100vh);}
-  to {transform: translateY(-10vh);}
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+
+/* Fireworks */
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:gold;
+  border-radius:50%;
+  animation:explode 1s ease-out forwards;
+}
+
+@keyframes explode{
+  from{transform:scale(1);}
+  to{transform:scale(18); opacity:0;}
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-  <h1>🕯️ You Have Received an Owl Post</h1>
-  <p>Open this at exactly 12:00 AM</p>
-  <button onclick="openLetter()">Open the Letter</button>
+<!-- LOADING -->
+<div id="loading">
+  <div class="loader-text">The Owl is Approaching...</div>
+</div>
 
-  <div class="letter" id="letter">
+<!-- INTRO -->
+<div class="screen" id="intro">
+  <h1>🕯️ An Owl Has Arrived</h1>
+  <p>Open at exactly 12:00 AM</p>
+  <button onclick="startMagic()">Begin the Magic</button>
+</div>
+
+<!-- PASSWORD -->
+<div class="screen hidden" id="password">
+  <h2>🔐 Enter the Gryffindor Password</h2>
+  <input type="text" id="passInput" placeholder="Password">
+  <button onclick="checkPass()">Unlock</button>
+</div>
+
+<!-- LION -->
+<div class="screen hidden" id="lionScreen">
+  <img class="lion" src="https://i.imgur.com/9XnKXgH.gif">
+  <h2>Welcome, Sasta SRK of Gryffindor</h2>
+</div>
+
+<!-- LETTER -->
+<div class="screen hidden" id="letterScreen">
+  <div class="letter-box">
     <h2>Hogwarts School of Witchcraft and Wizardry</h2>
-    <p>Dear Mr. Molu Golu,</p>
+    <p id="typewriter"></p>
 
+    <h3>📜 Ministry Secret Records</h3>
     <p>
-    The Ministry of Magic has confirmed that today marks
-    the birthday of a true Gryffindor —
-    brave, loyal, dramatic, and slightly chaotic.
+    Subject: Dhadpadyaa (also known as Sasta SRK)<br><br>
+
+    Known Magical Traits:<br>
+    • Falls randomly — earning the legendary title “Dhadpadyaa” — but rises dramatically like SRK in slow motion.<br>
+    • Official Head of Hogwarts Gossip Department (elite confidential gossip only).<br>
+    • Firmly believes he is Shah Rukh Khan (Ministry-approved budget edition).<br>
+    • Possesses suspiciously elastic, molu-golu soft skin — clearly protected by ancient enchantments.
     </p>
 
-    <p>
-    On this 21st of May, the wizarding world celebrates YOU.
-    </p>
-
-    <p>
-    May your year be filled with courage,
-    victories, adventures, and unlimited laughter.
-    </p>
-
-    <h3>Happy Birthday, Wizard.</h3>
-
+    <h3>Happy Birthday, My Favorite Gryffindor.</h3>
     <p>— Varada Devi</p>
+
+    <button onclick="celebrate()">Unleash Fireworks 🎆</button>
   </div>
 </div>
 
-<script>
-function openLetter() {
-  document.getElementById("letter").style.display = "block";
-}
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_1d10f9f02c.mp3" type="audio/mpeg">
+</audio>
 
-for(let i=0;i<50;i++){
-  let star = document.createElement("div");
-  star.className = "sparkle";
-  star.style.left = Math.random()*100 + "vw";
-  star.style.animationDuration = (Math.random()*5+3) + "s";
+<script>
+
+/* Sparkles */
+for(let i=0;i<160;i++){
+  let star=document.createElement("div");
+  star.className="sparkle";
+  star.style.left=Math.random()*100+"vw";
+  star.style.animationDuration=(Math.random()*6+5)+"s";
   document.body.appendChild(star);
 }
-</script>
 
+function startMagic(){
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("password").classList.remove("hidden");
+  document.getElementById("music").play();
+}
+
+function checkPass(){
+  let pass=document.getElementById("passInput").value.toLowerCase();
+  if(pass==="gryffindor"){
+    document.getElementById("password").classList.add("hidden");
+    document.getElementById("lionScreen").classList.remove("hidden");
+    setTimeout(showLetter,3000);
+  } else{
+    alert("Even SRK would remember the password.");
+  }
+}
+
+function showLetter(){
+  document.getElementById("lionScreen").classList.add("hidden");
+  document.getElementById("letterScreen").classList.remove("hidden");
+  typeWriter();
+}
+
+/* Cinematic Typewriter */
+let text="Dear Mr. Sasta SRK (also known as Dhadpadyaa),\n\nThe Ministry of Magic confirms that today marks the birthday of a Gryffindor who may fall often — but always rises dramatically.\n\nYou may be clumsy, but your loyalty is unmatched.\nYou may gossip, but only with your favorite partner.\nYou may call yourself SRK… but in this story, you are the real main character.\n\nOn this 21st of May, the wizarding world celebrates YOU.";
+let i=0;
+
+function typeWriter(){
+  if(i<text.length){
+    document.getElementById("typewriter").innerHTML+=text.charAt(i);
+    i++;
+    setTimeout(typeWriter,30);
+  }
+}
+
+function celebrate(){
+  for(let i=0;i<30;i++){
+    let fw=document.createElement("div");
+    fw.className="firework";
+    fw.style.left=Math.random()*100+"vw";
+    fw.style.top=Math.random()*100+"vh";
+    document.body.appendChild(fw);
+  }
+}
+
+</script>
 </body>
 </html>

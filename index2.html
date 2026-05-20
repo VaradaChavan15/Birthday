@@ -352,9 +352,8 @@ function unlock(){
     document.getElementById('lionScreen').classList.remove('hidden');
     setTimeout(showLetter,3000);
   } else {
-    msg.textContent='Access denied. Incorrect Password.\n\nThe Fat Lady says: “इतना confidence कहाँ से आता है गलत answer देकर?”\n\nHint: maybe try the exact name under which your number is saved in Varada Devi’s phone 🤡';
+    msg.innerHTML='Access denied. Incorrect Password.<br><br>The Fat Lady says: “इतना confidence कहाँ से आता है गलत answer देकर?”<br><br>Hint: maybe try the exact name under which your number is saved in Varada Devi’s phone 🤡';
     document.getElementById('passInput').value='';
-    setTimeout(()=>msg.textContent='',2500);
   }
 }
 

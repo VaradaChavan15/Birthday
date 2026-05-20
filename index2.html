@@ -346,13 +346,13 @@ function unlock(){
   const val=document.getElementById('passInput').value.trim().toLowerCase();
   const msg=document.getElementById('wrongMsg');
 
-  if(val==='gryffindor'){
+  if(val==='molu golu'){
     startMusic();
     document.getElementById('password').classList.add('hidden');
     document.getElementById('lionScreen').classList.remove('hidden');
     setTimeout(showLetter,3000);
   } else {
-    msg.textContent='The Fat Lady shakes her head. Try again.';
+    msg.textContent='Access denied. Incorrect Password.\n\nThe Fat Lady says: “इतना confidence कहाँ से आता है गलत answer देकर?”\n\nHint: maybe try the exact name under which your number is saved in Varada Devi’s phone 🤡';
     document.getElementById('passInput').value='';
     setTimeout(()=>msg.textContent='',2500);
   }
